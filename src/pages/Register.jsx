@@ -7,7 +7,7 @@ const Register = (props) => {
 
   // props.func(items)
   const getLocalItmes = () => {
-    let list = localStorage.getItem("lists")
+    let list = localStorage.getItem("lists");
     // console.log(list);
 
     if (list) {
@@ -32,20 +32,34 @@ const Register = (props) => {
   const [pswd, setPswd] = useState("");
   const [cpswd, setcPswd] = useState("");
   const [smsg, setSmsg] = useState(false);
-  const [isSubmit, setSubmit] = useState(true)
-  const [emailError, setEmailError] = useState(false)
+  const [isSubmit, setSubmit] = useState(true);
+  const [emailError, setEmailError] = useState(false);
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
   //   setInput({ ...input, [name]: value });
   // };
   const addItem = (e) => {
     e.preventDefault();
-    if (!input.name.trim() || !input.password.trim() || !input.email.trim() || (!input.cpassword.trim() || !(input.password === input.cpassword)) || !(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email)) || !(/^[A-Za-z. ]{3,30}$/i.test(input.name)) || !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/i.test(input.password))) {
-      if (!input.name.trim() || !(/^[A-Za-z. ]{3,30}$/i.test(input.name))) {
-        setError({ ...error, nameError: 'Please provide a valid name' })
+    if (
+      !input.name.trim() ||
+      !input.password.trim() ||
+      !input.email.trim() ||
+      !input.cpassword.trim() ||
+      !(input.password === input.cpassword) ||
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email) ||
+      !/^[A-Za-z. ]{3,30}$/i.test(input.name) ||
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/i.test(
+        input.password
+      )
+    ) {
+      if (!input.name.trim() || !/^[A-Za-z. ]{3,30}$/i.test(input.name)) {
+        setError({ ...error, nameError: "Please provide a valid name" });
       }
-      if (!input.email.trim() || !(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email))) {
-        setError({ ...error, emailError: 'Please provide a valid email' })
+      if (
+        !input.email.trim() ||
+        !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email)
+      ) {
+        setError({ ...error, emailError: "Please provide a valid email" });
       }
       // else{
       //   for(let i=0;i<items.length;i++){
@@ -55,42 +69,48 @@ const Register = (props) => {
       //     }
       //   }
       // }
-      if (!input.password.trim() || !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/i.test(input.password))) {
-        setError({ ...error, passwordError: 'Please provide a valid password' })
+      if (
+        !input.password.trim() ||
+        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/i.test(
+          input.password
+        )
+      ) {
+        setError({
+          ...error,
+          passwordError: "Please provide a valid password",
+        });
         // console.log(1)
       }
       if (!input.cpassword.trim() || !(input.password === input.cpassword)) {
-        setError({ ...error, cpswdError: 'Please reenter the feild' })
+        setError({ ...error, cpswdError: "Please reenter the feild" });
       }
-      // setSubmit(false)
-    }
-    else {
+      setSubmit(false)
+    } else {
       let a;
-        for(let i=0;i<items.length;i++){
-          if(items[i].email==input.email){
-            setError({...error,emailError:"email is already esists"})
-            a=2
-            break
-          }
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].email == input.email) {
+          setError({ ...error, emailError: "email is already esists" });
+          a = 2;
+          break;
         }
-        if(a==2){
-          console.log(1)
-          return
-        }
-        else{
-          console.log(2)
-          setItems([...items,input])
-        }
-
-
+      }
+      if (a == 2) {
+        // console.log(1)
+        return;
+      } else {
+        // console.log(2)
+        setItems([...items, input]);
+        setSubmit(true)
+        // props.open=false;
+      }
     }
     setInput({
       name: "",
       password: "",
       email: "",
       cpassword: "",
-    })
-  }
+    });
+  };
   // useEffect(()=> {
   //   setArrFunc(items);
   //  },[]);
@@ -126,14 +146,19 @@ const Register = (props) => {
                           className="input"
                           onChange={(e) => {
                             setInput({
-                              ...input, name: e.target.value
+                              ...input,
+                              name: e.target.value,
                             });
-                            setError({ ...error, nameError: '' })
+                            setError({ ...error, nameError: "" });
                           }}
                           value={input.name}
                         />
                       </div>
-                      {error.nameError && <div className="text-sm text-red-600 error">{error.nameError}</div>}
+                      {error.nameError && (
+                        <div className="text-sm text-red-600 error">
+                          {error.nameError}
+                        </div>
+                      )}
                     </div>
                     <div className="content">
                       <div className="userName">
@@ -144,14 +169,19 @@ const Register = (props) => {
                           className="input"
                           onChange={(e) => {
                             setInput({
-                              ...input, email: e.target.value
+                              ...input,
+                              email: e.target.value,
                             });
-                            setError({ ...error, emailError: '' })
+                            setError({ ...error, emailError: "" });
                           }}
                           value={input.email}
                         />
                       </div>
-                      {error.emailError && <div className="text-sm text-red-600 error">{error.emailError}</div>}
+                      {error.emailError && (
+                        <div className="text-sm text-red-600 error">
+                          {error.emailError}
+                        </div>
+                      )}
                     </div>
                     <div className="content">
                       <div className="password">
@@ -162,17 +192,23 @@ const Register = (props) => {
                           className="input"
                           onChange={(e) => {
                             setInput({
-                              ...input, password: e.target.value
+                              ...input,
+                              password: e.target.value,
                             });
                             setError({
-                              ...error, passwordError: ''
-                            })
+                              ...error,
+                              passwordError: "",
+                            });
                           }}
                           value={input.password}
                           // onChange={(e)=>}
                         />
                       </div>
-                      {error.passwordError && <div className="text-sm text-red-600 error">{error.passwordError}</div>}
+                      {error.passwordError && (
+                        <div className="text-sm text-red-600 error">
+                          {error.passwordError}
+                        </div>
+                      )}
                     </div>
                     <div className="content">
                       <div className="password">
@@ -183,12 +219,16 @@ const Register = (props) => {
                           className="input"
                           onChange={(e) => {
                             setInput({ ...input, cpassword: e.target.value });
-                            setError({ ...error, cpswdError: '' })
+                            setError({ ...error, cpswdError: "" });
                           }}
                           value={input.cpassword}
                         />
                       </div>
-                      {error.cpswdError && <div className="text-sm text-red-600 error">{error.cpswdError}</div>}
+                      {error.cpswdError && (
+                        <div className="text-sm text-red-600 error">
+                          {error.cpswdError}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -199,7 +239,7 @@ const Register = (props) => {
                   // enabled={isSubmit}
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={addItem}
+                  onClick={isSubmit?props.cancel:addItem}
                 >
                   Sign up
                 </button>
@@ -216,6 +256,6 @@ const Register = (props) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 export default Register;
