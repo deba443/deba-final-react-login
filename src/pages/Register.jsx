@@ -3,19 +3,9 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import { MdEmail } from "react-icons/md";
 import { useEffect, useState } from "react";
 const Register = (props) => {
-  // const nameCheck=
 
-  // props.func(items)
-  const getLocalItmes = () => {
-    let list = localStorage.getItem("lists");
-    // console.log(list);
+  let login=JSON.parse(localStorage.getItem('login'))
 
-    if (list) {
-      return JSON.parse(localStorage.getItem("lists"));
-    } else {
-      return [];
-    }
-  };
   const [input, setInput] = useState({
     name: "",
     password: "",
@@ -28,96 +18,126 @@ const Register = (props) => {
     emailError: "",
     cpswdError: "",
   });
-  const [items, setItems] = useState(getLocalItmes());
-  const [pswd, setPswd] = useState("");
-  const [cpswd, setcPswd] = useState("");
-  const [smsg, setSmsg] = useState(false);
-  const [isSubmit, setSubmit] = useState(true);
-  const [emailError, setEmailError] = useState(false);
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setInput({ ...input, [name]: value });
-  // };
+
   const addItem = (e) => {
     e.preventDefault();
+    login=null
+    localStorage.setItem('login',JSON.stringify(login))
     if (
       !input.name.trim() ||
+      !(input.name.trim().length>2) ||
       !input.password.trim() ||
       !input.email.trim() ||
+      !(input.password.trim().length>4) ||
       !input.cpassword.trim() ||
+      !(input.cpassword.length>4) ||
       !(input.password === input.cpassword) ||
-      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email) ||
-      !/^[A-Za-z. ]{3,30}$/i.test(input.name) ||
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/i.test(
-        input.password
-      )
-    ) {
-      if (!input.name.trim() || !/^[A-Za-z. ]{3,30}$/i.test(input.name)) {
-        setError({ ...error, nameError: "Please provide a valid name" });
+      !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email)){
+      if (!input.name.trim() || !(input.name.trim().length>2)) {
+        if(!input.name.trim()){
+          setError({ ...error, nameError: "Please fill the name feild" });
+          return
+        }
+        else{
+          setError({ ...error, nameError: "Please enter atleast 3 character" });
+          return
+        }
       }
       if (
         !input.email.trim() ||
         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(input.email)
       ) {
-        setError({ ...error, emailError: "Please provide a valid email" });
-      }
-      // else{
-      //   for(let i=0;i<items.length;i++){
-      //     if(items[i].email==input.email){
-      //       setError({...error,emailError:"email is already esists"})
-      //       // break
-      //     }
-      //   }
-      // }
-      if (
-        !input.password.trim() ||
-        !/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/i.test(
-          input.password
-        )
-      ) {
-        setError({
-          ...error,
-          passwordError: "Please provide a valid password",
-        });
-        // console.log(1)
-      }
-      if (!input.cpassword.trim() || !(input.password === input.cpassword)) {
-        setError({ ...error, cpswdError: "Please reenter the feild" });
-      }
-      setSubmit(false)
-    } else {
-      let a;
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].email == input.email) {
-          setError({ ...error, emailError: "email is already esists" });
-          a = 2;
-          break;
+        if(!input.email.trim()){
+          setError({ ...error, emailError: "Please fill the email feild" });
+          return
+        }
+        else{
+          setError({ ...error, emailError: "Please provide a valid email" });
+          return
         }
       }
-      if (a == 2) {
-        // console.log(1)
-        return;
-      } else {
-        // console.log(2)
-        setItems([...items, input]);
-        setSubmit(true)
-        // props.open=false;
+      if (
+        !input.password.trim() || !(input.password.trim().length>4)
+      ) {
+        if(!input.password.trim()){
+          setError({
+            ...error,
+            passwordError: "Please fill the password feild",
+          });
+          return
+        }
+        else{
+          setError({
+            ...error,
+            passwordError: "Please enter atleast 5 character",
+          });
+          return
+        }
       }
-    }
-    setInput({
-      name: "",
-      password: "",
-      email: "",
-      cpassword: "",
-    });
-  };
-  // useEffect(()=> {
-  //   setArrFunc(items);
-  //  },[]);
+      if (!input.cpassword.trim() || !(input.password === input.cpassword) ) {
+        if(!input.cpassword.trim()){
+          setError({ ...error, cpswdError: "Please fill the feild" });
+          return
+        }
+        else{
+          setError({ ...error, cpswdError: "Password didn't match please enter again" });
+          return
+        }
+      }
+    } else {
+        let items=JSON.parse(localStorage.getItem("lists"))
+        if(items && items.length>0){
+          let user=items.find((val)=>{
+            return val.email===input.email
+          })
+          // console.log(user)
+          if(!user){
+            saveItems(input)
+            setInput({
+              name: "",
+              password: "",
+              email: "",
+              cpassword: "",
+            });
+            props.cancel()
+            return
+          }
+          else{
+            setError({ ...error, emailError: "email is already esists" });
+            return
 
-  useEffect(() => {
-    localStorage.setItem("lists", JSON.stringify(items));
-  }, [items]);
+
+          }
+        }
+        else{
+          saveItems(input)
+        }
+        setInput({
+          name: "",
+          password: "",
+          email: "",
+          cpassword: "",
+        });
+        props.cancel()
+        // close()
+      
+
+    }
+  };
+  const saveItems=(data)=>{
+    let items=JSON.parse(localStorage.getItem('lists'));
+    if(!items){
+      let arr=[]
+      arr.push(data)
+      localStorage.setItem('lists',JSON.stringify(arr))
+    }
+    else{
+      items.push(data)
+      localStorage.setItem('lists',JSON.stringify(items))
+
+    }
+  }
+
   return (
     <div>
       <div
@@ -164,7 +184,7 @@ const Register = (props) => {
                       <div className="userName">
                         <MdEmail />
                         <input
-                          type="text"
+                          type="email"
                           placeholder="email"
                           className="input"
                           onChange={(e) => {
@@ -201,7 +221,7 @@ const Register = (props) => {
                             });
                           }}
                           value={input.password}
-                          // onChange={(e)=>}
+                          
                         />
                       </div>
                       {error.passwordError && (
@@ -233,13 +253,12 @@ const Register = (props) => {
                   </div>
                 </div>
               </div>
+              {/* This is the taliwind modal */}
               <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                 <button
-                  // disabled={!isSubmit}
-                  // enabled={isSubmit}
                   type="button"
                   class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={isSubmit?props.cancel:addItem}
+                  onClick={addItem}
                 >
                   Sign up
                 </button>
