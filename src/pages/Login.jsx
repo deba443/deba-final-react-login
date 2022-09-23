@@ -8,6 +8,7 @@ import Register from "./Register";
 import Welcome from "./Welcome";
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { NumberSchema } from "yup";
+import { MdEmail } from "react-icons/md";
 
 
 const Login = () => {
@@ -59,8 +60,8 @@ const Login = () => {
   const saveValue=(data)=>{
     let arr=JSON.parse(localStorage.getItem('login'))
     if(!arr){
-      let cp=[data]
-      localStorage.setItem('login',JSON.stringify(cp))
+      // let cp=[data]
+      localStorage.setItem('login',JSON.stringify(data))
     }
     else{
       let ar=null
@@ -90,7 +91,7 @@ const Login = () => {
             <div className="conatainer__input">
               <div className="content">
               <div className="userName">
-                <HiUser />
+              <MdEmail />
                 <input
                   type="text"
                   placeholder="email"
